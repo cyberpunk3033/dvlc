@@ -1,0 +1,32 @@
+/* Определяем основные цвета */
+:root {
+--dark-green: #006400;
+--gray: #808080;
+}
+
+/* Применяем белый цвет текста ко всем элементам */
+* {
+color: white;
+}
+
+/* Делаем фон страницы темно-зеленым */
+body {
+background-color: var(--dark-green);
+}
+
+/* Делаем фон заголовков серым */
+h1, h2, h3, h4, h5, h6 {
+background-color: var(--gray);
+}
+
+/* Добавляем немного отступов и границ для заголовков */
+h1, h2, h3, h4, h5, h6 {
+padding: 10px;
+border: 2px solid white;
+}
+
+/* Делаем ссылки подчеркнутыми и белыми */
+a {
+text-decoration: underline;
+color: white;
+}
