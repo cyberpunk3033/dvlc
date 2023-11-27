@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контрагенты{% endblock %}
+
+{% block content %}
+<h1>Контрагенты</h1>
+<form method="GET" action="{% url 'client_list' %}">
+    <label>
+        <input type="text" name="q" placeholder="Введите имя клиента">
+    </label>
+    <input type="submit" value="Поиск">
+</form>
+<ul>
+{% for client in client_list %}
+<li>
+<a href="{% url 'client_detail' client.id %}">{{ client.name }}</a>
+<p>{{ client.note }}</p>
+<p>УНП: {{ client.unp }}</p>
+<p>Email: {{ client.email }}</p>
+<p>Телефон: {{ client.phone }}</p>
+<p>Адрес: {{ client.address }}</p>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}

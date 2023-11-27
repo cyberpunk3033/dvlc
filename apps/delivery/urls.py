@@ -1,6 +1,17 @@
-from django.urls import path
+from django.views.generic import TemplateView
 from django.urls import path
 from django.views.generic import TemplateView
+from . import views
+
+
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='base.html')),
-                ]
+    path('', views.login_view, name='login'),
+    path('base/', TemplateView.as_view(template_name='base.html')),
+    path('client_list/', views.client_list, name='client_list'),
+    path('add/', views.client_form, name='client_form'),
+    path('client/<int:pk>/', views.client_list, name='client_detail'),
+    path('client/', views.client_list, name='client_list'),
+    path('client/search/', views.client_search, name='client_search'),
+
+          ]
+
