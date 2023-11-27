@@ -1,12 +1,12 @@
-
-# Create your views here.
+# VIEWS
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .forms import ClientForm
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Client
+from .forms import ClientForm
 
-# Create your views here.
+#region ЛОГИН
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -21,7 +21,15 @@ def login_view(request):
         error_message = ''
 
     return render(request, 'login.html', {'error_message': error_message})
+#endregion
+
+#region КОНТРАГЕНТЫ
 def client_list(request):
+    '''
+    Весь список клиентов
+    :param request:
+    :return:
+    '''
     # проверяем, есть ли параметр q в запросе
     q = request.GET.get('q')
     if q:
@@ -33,40 +41,51 @@ def client_list(request):
         # передаем список клиентов в шаблон
         return render(request, 'client_list.html', {'client_list': client_list})
 
-
 def client_search(request, q):
+    '''
+    Функция поиска клиентов
+    :param request:
+    :param q:
+    :return:
+    '''
     # фильтруем список клиентов по полю name
     client_list = Client.objects.filter(name__icontains=q)
     # передаем отфильтрованный список в шаблон
     return render(request, 'client_list.html', {'client_list': client_list})
-'''
-def client_list(request):
-# получаем список всех клиентов из базы данных
-    client_list = Client.objects.all()
-    # передаем список клиентов в шаблон
-    return render(request, 'client_list.html', {'client_list': client_list})
-
-def client_search(request):
-# получаем значение из параметра q в запросе
-    q = request.GET.get('q')
-    # фильтруем список клиентов по полю name
-    client_list = Client.objects.filter(name__icontains=q)
-    # передаем отфильтрованный список в шаблон
-    return render(request, 'client_list.html', {'client_list': client_list})
-'''
 def client_form(request):
-# если запрос методом POST, то обрабатываем данные из формы
+    '''
+    Добавление нового клиента
+    :param request:
+    :return:
+    '''
     if request.method == 'POST':
-    # создаем объект формы и заполняем его данными из запроса
         form = ClientForm(request.POST)
-    # проверяем валидность данных
         if form.is_valid():
-        # сохраняем данные в базу данных
             form.save()
-        # перенаправляем на страницу со списком клиентов
             return redirect('client_list')
-        # если запрос методом GET, то создаем пустой объект формы
+
     else:
         form = ClientForm()
-        # передаем объект формы в шаблон
+
         return render(request, 'client_form.html', {'form': form})
+
+
+def client_edit(request, pk):
+    '''
+    Изменение данных контрагента по
+    первичному ключу при выборе в списке
+    :param request:
+    :param pk:
+    :return:
+    '''
+    client = get_object_or_404(Client, pk=pk)
+    if request.method == 'POST':
+        form = ClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            return redirect('client_list')
+    else:
+        form = ClientForm(instance=client)
+        return render(request, 'client_edit.html', {'form': form})
+
+#endregion

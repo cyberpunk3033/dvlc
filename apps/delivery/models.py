@@ -1,11 +1,9 @@
+# MODELS
 from datetime import timedelta, datetime
 from apps.user.models import CustomUser
 from django.db import models
 
 
-# region BASE FUNCTIONS AND CLASSES
-
-# endregion
 
 # region ДОСТАВКА
 class TypeDelivery(models.Model):
@@ -45,6 +43,7 @@ class DeliveryRate(models.Model):
 
 # endregion
 
+
 # region БАЗОВЫЕ ЦЕПИ
 
 class BaseChain(models.Model):
@@ -76,6 +75,7 @@ class BaseChain(models.Model):
 
 
 # endregion
+
 
 # region БРЭНД ЦЕПИ И ВАРИАНТЫ ОБРАБОТКИ
 class BrandChain(models.Model):
@@ -123,6 +123,8 @@ class OtherVariant(models.Model):
 
 # endregion
 
+
+#region КОНТРАГЕНТ И КОНТАКТЫ
 class Client(models.Model):
     # поля для клиента
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
@@ -157,8 +159,10 @@ class ContactClient(models.Model):  # наследуем от модели и б
     class Meta:
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
+#endregion
 
 
+#region РАСЧЕТЫ ДОСТАВКИ
 class Calculation(models.Model):
     """
         РАСЧЕТЫ ДОСТАВКИ
@@ -187,7 +191,7 @@ class Calculation(models.Model):
         super().save(*args, **kwargs)
 
 
-
+#endregion
 
 
 

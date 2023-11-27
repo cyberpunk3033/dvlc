@@ -3,7 +3,7 @@ from .models import (BaseChain, OtherVariant,ContactClient,Calculation,BrandChai
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
-#region BASE FUNCTIONS AND CLASSES
+#region БАЗОВЫЕ ФУНКЦИИ И КЛАССЫ
 
 def views_admin_panel(models_:tuple):
 
@@ -27,12 +27,10 @@ def imp_exp_model_data(models_:tuple):
 
 
 tuple_models_imp_exp=(BaseChain,BrandChain,OtherVariant,DeliveryRate,TypeDelivery)
-
 imp_exp_model_data(tuple_models_imp_exp)
 
 
 tuple_models_adm_pnl=(Calculation,Client,ContactClient)
-
 views_admin_panel(tuple_models_adm_pnl)
 
 
