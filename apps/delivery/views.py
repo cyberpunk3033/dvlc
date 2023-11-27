@@ -52,12 +52,9 @@ def client_search(request, q):
     client_list = Client.objects.filter(name__icontains=q)
     # передаем отфильтрованный список в шаблон
     return render(request, 'client_list.html', {'client_list': client_list})
+'''
 def client_form(request):
-    '''
-    Добавление нового клиента
-    :param request:
-    :return:
-    '''
+  
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
@@ -68,7 +65,23 @@ def client_form(request):
         form = ClientForm()
 
         return render(request, 'client_form.html', {'form': form})
+'''
+def client_form(request):
 
+    if request.method == 'POST':
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False) # Не сохраняем форму сразу
+            client.user = request.user # Устанавливаем поле user равным текущему пользователю
+            client.save() # Сохраняем форму
+            return redirect('client_list')
+
+    else:
+        form = ClientForm()
+
+        return render(request, 'client_form.html', {'form': form})
+
+#TODO: НАСТРОИТЬ ПРАВА НА УДАЛЕНИЕ ИЗМЕНЕНИЕ КОНТРАГЕНТОВ
 
 def client_edit(request, pk):
     '''
