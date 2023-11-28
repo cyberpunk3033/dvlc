@@ -11,16 +11,50 @@
     </label>
     <input type="submit" value="Поиск">
 </form>
-<ul>
-{% for client in client_list %}
-<li>
-<a href="{% url 'client_detail' client.id %}">{{ client.name }}</a>
-<p>{{ client.note }}</p>
-<p>УНП: {{ client.unp }}</p>
-<p>Email: {{ client.email }}</p>
-<p>Телефон: {{ client.phone }}</p>
-<p>Адрес: {{ client.address }}</p>
-</li>
-{% endfor %}
-</ul>
+     <style type="text/css">
+   TABLE {
+
+    border-collapse: collapse; /* Убираем двойные линии между ячейками */
+   }
+   TD, TH {
+    padding: 3px; /* Поля вокруг содержимого таблицы */
+    border: 2px solid black; /* Параметры рамки */
+   }
+   TH {
+    background: #6f94c6; /* Цвет фона */
+   }
+  </style>
+ <table>
+  <thead>
+    <tr>
+        <th>Номер</th>
+      <th>Контрагент</th>
+      <th>Tип доставки</th>
+      <th>Базовая цепь</th>
+      <th>Брэнд</th>
+      <th>Тип обработки</th>
+        <th>Менеджер</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for client in client_list %}
+    <tr>
+    <td><a title="Нажмите для редактирования  и подробного просмотра" href="{% url 'client_detail' client.id  %}">{{ client.name }}</a></td>
+      <td>{{ client.note}}</td>
+      <td>{{ client.unp }}</td>
+      <td>{{ client.email}}</td>
+      <td>{{ client.phone}}</td>
+      <td>{{  client.address }}</td>
+    <td>{{  client.user }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
 {% endblock %}

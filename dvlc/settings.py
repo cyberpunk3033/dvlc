@@ -11,27 +11,16 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-v@zkg2)_vvmo&6&ln0qt%0+jcd^_d1$3otyx=fb&()pzdxlf##'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +40,6 @@ REST_FRAMEWORK =            {
 'rest_framework.renderers.BrowsableAPIRenderer',
                             ]
                             }
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,9 +52,7 @@ MIDDLEWARE = [
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 AUTH_USER_MODEL='user.CustomUser'
-
 ROOT_URLCONF = 'dvlc.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -83,7 +69,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'dvlc.wsgi.application'
 
 

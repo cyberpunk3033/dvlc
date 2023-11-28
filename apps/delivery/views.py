@@ -1,9 +1,9 @@
 # VIEWS
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ClientForm
-from .models import Client
-from .models import Calculation
+from .forms import ClientForm, CalculationForm
+from .models import Client,Calculation
+from django.views.generic import ListView, DetailView
 
 
 # region ЛОГИН
@@ -98,9 +98,6 @@ def client_edit(request, pk):
 
 # region РАСЧЕТЫ
 
-from django.views.generic import ListView, DetailView
-from .models import Calculation
-
 class CalculationListView(ListView):
     model = Calculation
     template_name = 'calculation_list.html'
@@ -110,4 +107,23 @@ class CalculationDetailView(DetailView):
     model = Calculation
     template_name = 'calculation_detail.html'
     context_object_name = 'calculation'
+
+def calculation_edit(request, pk):
+    """
+    Изменение данных контрагента по
+    первичному ключу при выборе в списке
+    :param request:
+    :param pk:
+    :return:
+    """
+    calculation = get_object_or_404(Calculation, pk=pk)
+    if request.method == 'POST':
+        form = CalculationForm(request.POST, instance=calculation)
+        if form.is_valid():
+            form.save()
+            return redirect('calculation_list')
+    else:
+        form = CalculationForm(instance=calculation)
+        return render(request, 'calculation_detail.html', {'form': form})
+
 # endregion
