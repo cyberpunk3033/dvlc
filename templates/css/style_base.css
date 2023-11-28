@@ -6,27 +6,79 @@
 
 /* Применяем белый цвет текста ко всем элементам */
 * {
-color: black;
+color:  dodgerblue;
 }
 
 /* Делаем фон страницы темно-зеленым */
 body {
-background-color: var(--font-family-monospace);
+background-color:black;
+    font-family: Arial, sans-serif;
 }
 
 /* Делаем фон заголовков серым */
 h1, h2, h3, h4, h5, h6 {
-background-color: var(--gray);
+background-color: darkgray;
 }
 
 /* Добавляем немного отступов и границ для заголовков */
 h1, h2, h3, h4, h5, h6 {
 padding: 10px;
-border: 2px solid white;
+border: 2px solid black;
 }
 
 /* Делаем ссылки подчеркнутыми и белыми */
 a {
-text-decoration: underline;
+text-decoration: antiquewhite;
+color: deepskyblue;
+}
+/* Делаем фон заголовков темно-синим, а текст белым */
+th {
+background-color: darkblue;
 color: white;
+}
+
+/* Делаем фон четных строк светло-серым */
+tr:nth-child(even) {
+background-color: darkslateblue;
+}
+
+/* Делаем границу таблицы толщиной 5 пикселей и красного цвета */
+table {
+border: 3px solid  grey;
+}
+
+/* Делаем границы ячеек тонкими и черными, кроме нижней границы, которая толстая и зеленая */
+td {
+border-style: solid;
+border-width: thin thin thin thin;
+border-color: grey grey grey grey;
+}
+
+/* Объединяем двойные границы в одну */
+table {
+border-collapse: collapse;
+}
+
+/* Выравниваем текст в заголовках по центру по горизонтали и вертикали */
+th {
+text-align: center;
+vertical-align: middle;
+}
+
+/* Выравниваем текст в ячейках с числами по правому краю по горизонтали и по центру по вертикали */
+td:nth-child(3), td:nth-child(4) {
+text-align: right;
+vertical-align: middle;
+}
+
+/* Делаем шрифт таблицы Arial и размером 16 пикселей */
+table {
+font-family: Arial, sans-serif;
+font-size: 16px;
+}
+
+/* Делаем шрифт заголовков жирным и размером 20 пикселей */
+th {
+font-weight: bold;
+font-size: 15px;
 }

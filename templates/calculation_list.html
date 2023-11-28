@@ -2,23 +2,10 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Последние расчеты</h1>
-    <style type="text/css">
-   TABLE {
 
-    border-collapse: collapse; /* Убираем двойные линии между ячейками */
-   }
-   TD, TH {
-    padding: 3px; /* Поля вокруг содержимого таблицы */
-    border: 2px solid black; /* Параметры рамки */
-   }
-   TH {
-    background: #6f94c6; /* Цвет фона */
-   }
-  </style>
 <table>
   <thead>
     <tr>
-        <th>Номер</th>
       <th>Контрагент</th>
       <th>Tип доставки</th>
       <th>Базовая цепь</th>
@@ -33,8 +20,7 @@
   <tbody>
     {% for calculation in calculations %}
     <tr>
-    <td><a title="Нажмите для редактирования  и подробного просмотра" href="{% url 'calculation_detail' calculation.pk %}">{{ calculation.id }}</a></td>
-      <td>{{ calculation.client }}</td>
+        <td><a title="Нажмите для редактирования  и подробного просмотра" href="{% url 'calculation_detail' calculation.pk %}">{{ calculation.client }}</a></td>
       <td>{{ calculation.type_delivery }}</td>
       <td>{{ calculation.base_chain }}</td>
       <td>{{ calculation.brand }}</td>
