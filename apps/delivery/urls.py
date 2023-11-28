@@ -3,6 +3,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from . import views
 
+from .views import CalculationListView, CalculationDetailView
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -11,8 +12,12 @@ urlpatterns = [
     path('add/', views.client_form, name='client_form'),
     path('client/<int:pk>/', views.client_edit, name='client_detail'),
     path('client/', views.client_list, name='client_list'),
-    #path('client/search/', views.client_search, name='client_search'),
-    # path('client/<int:pk>/edit/', views.client_edit, name='client_edit'),
 
-          ]
+    path('calculations/', CalculationListView.as_view(), name='calculation-list'),
+    path('calculation/<int:pk>/', CalculationDetailView.as_view(), name='calculation_detail'),
+
+
+        ]
+
+
 

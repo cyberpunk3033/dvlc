@@ -4,7 +4,6 @@ from apps.user.models import CustomUser
 from django.db import models
 
 
-
 # region ДОСТАВКА
 class TypeDelivery(models.Model):
     """
@@ -124,7 +123,7 @@ class OtherVariant(models.Model):
 # endregion
 
 
-#region КОНТРАГЕНТ И КОНТАКТЫ
+# region КОНТРАГЕНТ И КОНТАКТЫ
 class Client(models.Model):
     # поля для клиента
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
@@ -159,18 +158,19 @@ class ContactClient(models.Model):  # наследуем от модели и б
     class Meta:
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
-#endregion
 
 
-#region РАСЧЕТЫ ДОСТАВКИ
+# endregion
+
+
+# region РАСЧЕТЫ ДОСТАВКИ
 class Calculation(models.Model):
     """
-        РАСЧЕТЫ ДОСТАВКИ
+         ВЫПОЛНЕННЫЕ РАСЧЕТЫ ДОСТАВКИ
     """
-
     client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
     type_delivery = models.ForeignKey(TypeDelivery, on_delete=models.CASCADE, default=None)
-    contact_client = models.ForeignKey(ContactClient, on_delete=models.CASCADE, default=None)
+    #contact_client = models.ForeignKey(ContactClient, on_delete=models.CASCADE, default=None)
     base_chain = models.ForeignKey(BaseChain, on_delete=models.CASCADE, default=0)
     brand = models.ForeignKey(BrandChain, on_delete=models.CASCADE, default=0)
     type_processing = models.ForeignKey(OtherVariant, on_delete=models.CASCADE, default=0)
@@ -186,19 +186,11 @@ class Calculation(models.Model):
         verbose_name_plural = 'Расчеты'
 
     def save(self, *args, **kwargs):
+        """
+        Вычисление примерной даты доставки
+        """
         if self.days:  # Проверить, что days имеет значение, а не None
-            self.data_delivery = datetime.now().date() + timedelta(days=self.days)  # Вычислить дата доставки
+            self.data_delivery = datetime.now().date() + timedelta(days=self.days)  # Вычислить датУ доставки
         super().save(*args, **kwargs)
 
-
-#endregion
-
-
-
-
-
-
-
-
-
-
+# endregion

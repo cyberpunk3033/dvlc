@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <title>Детали расчета <p>Клиент: {{ calculation.client.name }}</p> от <p>Дата расчета: {{ calculation.created }}</p></title>
+</head>
+<body>
+    <h1>Детали Расчета #{{ calculation.id }}</h1>
+    <p>Клиент: {{ calculation.client }}</p>
+    <p>Тип доставки: {{ calculation.type_delivery }}</p>
+    <p>Базовая цепь: {{ calculation.base_chain }}</p>
+    <p>Брэнд цепи: {{ calculation.brand }}</p>
+    <p>Тип обработки: {{ calculation.type_processing }}</p>
+    <p>Вес: {{ calculation.weight }}</p>
+    <p>Дней на доставку: {{ calculation.days }}</p>
+    <p>Дата расчета: {{ calculation.created }}</p>
+    <p>Дата доставки: {{ calculation.data_delivery }}</p>
+</body>
+{% endblock content %}

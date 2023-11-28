@@ -43,8 +43,14 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.delivery',
     'import_export',
-
-]
+    'rest_framework',
+                ]
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+REST_FRAMEWORK =            {
+'DEFAULT_RENDERER_CLASSES': [
+'rest_framework.renderers.BrowsableAPIRenderer',
+                            ]
+                            }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-#!!НОВОЕ
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 AUTH_USER_MODEL='user.CustomUser'
 
 ROOT_URLCONF = 'dvlc.urls'

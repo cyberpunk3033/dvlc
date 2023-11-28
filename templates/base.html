@@ -12,11 +12,17 @@
 <div class="sidebar">
 <ul class="nav">
 <li class="nav-item"><a href="{% url 'admin:index' %}" class="nav-link">Администрирование</a></li>
-
+    <li class="nav-item"><a href="{% url 'calculation-list' %}">Посмотреть все расчеты</a></li>
     <li class="nav-item"><a href="{% url 'client_list' %}" class="nav-link">Контрагенты</a></li>
     <ul class="nav">
         <li class="nav-item"><a href="{% url 'client_form' %}" class="nav-link">Добавить контрагента</a></li>
+
     </ul>
+    <ul class="nav">
+
+    </ul>
+
+
 </ul>
 </div>
 <div class="content">
@@ -26,7 +32,6 @@
 </div>
 </body>
 </html>
-КОНТЕНТ
 <html lang="en">
 <head>
     <meta charset="UTF-8">
