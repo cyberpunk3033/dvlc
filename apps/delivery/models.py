@@ -174,14 +174,12 @@ class Calculation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)
     type_delivery = models.ForeignKey(TypeDelivery, on_delete=models.CASCADE, default=None)
-    # contact_client = models.ForeignKey(ContactClient, on_delete=models.CASCADE, default=None)
     base_chain = models.ForeignKey(BaseChain, on_delete=models.CASCADE, default=0)
     brand = models.ForeignKey(BrandChain, on_delete=models.CASCADE, default=0)
     type_processing = models.ForeignKey(OtherVariant, on_delete=models.CASCADE, default=0)
     weight = models.IntegerField(verbose_name='Вес общий', default=1)
     days = models.IntegerField(verbose_name='Дней на доставку', default=1)
     created = models.DateTimeField(verbose_name='Дата расчета', default=datetime.now)
-
     data_delivery = models.DateField(verbose_name='Ориентировочная дата доставки',
                                      default=datetime.now)  # рассчитать автоматически
 

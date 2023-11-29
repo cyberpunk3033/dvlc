@@ -1,8 +1,13 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Создание расчета{% endblock %}
-
+<form method="GET" action="{% url 'client_list' %}">
+<label>
+<input type="text" name="q" placeholder="Введите имя клиента">
+</label>
+<input type="submit" value="Поиск">
+</form>
 {% block content %}
 <h1>Добавить расчет</h1>
 <form method="POST">
@@ -10,4 +15,6 @@
 {{ form.as_p }}
 <button type="submit">Сохранить</button>
 </form>
+<script src="{% static "searchableselect/js/jquery-2.0.3.min.js" %}"></script>
+<script src="{% static "searchableselect/js/searchableselect.js" %}"></script>
 {% endblock %}

@@ -111,6 +111,7 @@ class CalculationDetailView(DetailView):
     context_object_name = 'calculation'
 
 def CalculationCreateView(request):
+
     if request.method == 'POST':
         form = CalculationForm(request.POST)
         if form.is_valid():
@@ -124,7 +125,6 @@ def CalculationCreateView(request):
 
         return render(request, 'calculation/calculation_create.html', {'form': form})
 # endregion
-
 
 
 

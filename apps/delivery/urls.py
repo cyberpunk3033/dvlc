@@ -1,5 +1,5 @@
 #URLS
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from . import views
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('calculations/', CalculationListView.as_view(), name='calculation-list'),
     path('calculation/<int:pk>/', CalculationDetailView.as_view(), name='calculation_detail'),
     path("calculation-create", views.CalculationCreateView, name="calculation-create"),
+
 
 
 

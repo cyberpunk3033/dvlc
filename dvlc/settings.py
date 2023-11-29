@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'apps.delivery',
     'import_export',
     'rest_framework',
+    'searchableselect',
                 ]
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 REST_FRAMEWORK =            {
