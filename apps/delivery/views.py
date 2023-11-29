@@ -1,10 +1,14 @@
 # VIEWS
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+
 from .forms import ClientForm, CalculationForm
 from .models import Client,Calculation
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
+from rest_framework import generics
 
+from .serializers import CalculationSerializer
 
 # region ЛОГИН
 def login_view(request):
@@ -94,7 +98,6 @@ def client_edit(request, pk):
         return render(request, 'client_edit.html', {'form': form})
 
 
-# endregion
 
 # region РАСЧЕТЫ
 
@@ -102,7 +105,7 @@ class CalculationListView(ListView):
     model = Calculation
     template_name = 'calculation_list.html'
     context_object_name = 'calculations'
-
+    paginate_by = 10  #
 class CalculationDetailView(DetailView):
     model = Calculation
     template_name = 'calculation_detail.html'
@@ -126,4 +129,23 @@ def calculation_edit(request, pk):
         form = CalculationForm(instance=calculation)
         return render(request, 'calculation_detail.html', {'form': form})
 
+# endregion
+
+def search_clients(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        query = request.GET.get('query', '')
+        clients = Client.objects.filter(name__icontains=query)
+
+        data = [{'id': client.id, 'name': client.name} for client in clients]
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({}, status=400)
+
+
+
+
+
+class CalculationCreateView(generics.CreateAPIView):
+    queryset = Calculation.objects.all() # набор объектов для проверки уникальности
+    serializer_class = CalculationSerializer # сериализатор для ввода и вывода данных
 # endregion

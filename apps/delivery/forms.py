@@ -16,4 +16,3 @@ class CalculationForm(forms.ModelForm):
         model = Calculation
         fields = '__all__'
 
-

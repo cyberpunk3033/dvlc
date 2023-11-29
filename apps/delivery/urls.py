@@ -3,7 +3,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from . import views
 
-from .views import CalculationListView, CalculationDetailView
+from .views import CalculationListView, CalculationDetailView,  CalculationCreateView
 
 urlpatterns = [
     path('', views.login_view, name='login'),
@@ -15,6 +15,9 @@ urlpatterns = [
 
     path('calculations/', CalculationListView.as_view(), name='calculation-list'),
     path('calculation/<int:pk>/', CalculationDetailView.as_view(), name='calculation_detail'),
+
+    path("calculation-create", CalculationCreateView.as_view(), name="calculation-create"),
+
 
 
         ]
