@@ -1,7 +1,12 @@
 <!DOCTY{% load static %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
-<head>
+<head><ul class="nav">
+            <li class="nav-item">Вы вошли как - {{ user.fio }} -> <a href="{% url "login" %}">Выйти</a></li>
+        </ul>
+
 <meta charset="UTF-8">
 <title>{% block title %}Расчет доставки цепей{% endblock %}</title>
 <link rel="stylesheet" href="{% static 'css/style_base.css' %}">

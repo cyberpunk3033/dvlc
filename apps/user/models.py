@@ -38,6 +38,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(('email address'), unique=True)
+    fio=models.CharField(verbose_name='ФИО',max_length=50, blank=True, null=True,default=None)
     user_email_password = models.CharField(verbose_name='Пароль email для отправки сообщений',
                                            max_length=50, help_text='Введите пароль от вашего емейла',blank=True, null=True)
 

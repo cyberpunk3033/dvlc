@@ -15,6 +15,7 @@
       <th>Поставка дней</th>
       <th>Создано</th>
       <th>Примерная дата доставки</th>
+        <th>Пользователь</th>
     </tr>
   </thead>
   <tbody>
@@ -29,6 +30,7 @@
       <td>{{ calculation.days }}</td>
       <td>{{ calculation.created }}</td>
       <td>{{ calculation.data_delivery }}</td>
+        <td>{{ calculation.user }}</td>
     </tr>
     {% endfor %}
   </tbody>

@@ -1,14 +1,12 @@
 # VIEWS
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-
 from .forms import ClientForm, CalculationForm
 from .models import Client,Calculation
-from django.views.generic import ListView, DetailView, UpdateView
-from rest_framework import generics
+from django.views.generic import ListView, DetailView
 
-from .serializers import CalculationSerializer
+
+
 
 # region ЛОГИН
 def login_view(request):
@@ -45,7 +43,7 @@ def client_list(request):
         # если нет, то получаем список всех клиентов из базы данных
         client_list = Client.objects.all()
         # передаем список клиентов в шаблон
-        return render(request, 'client_list.html', {'client_list': client_list})
+        return render(request, 'client/client_list.html', {'client_list': client_list})
 
 
 def client_search(request, q):
@@ -58,7 +56,7 @@ def client_search(request, q):
     # фильтруем список клиентов по полю name
     client_list = Client.objects.filter(name__icontains=q)
     # передаем отфильтрованный список в шаблон
-    return render(request, 'client_list.html', {'client_list': client_list})
+    return render(request, 'client/client_list.html', {'client_list': client_list})
 
 
 # TODO: автоматизировать подстановку пользователя при добавлении клиента
@@ -74,7 +72,7 @@ def client_form(request):
     else:
         form = ClientForm()
 
-        return render(request, 'client_form.html', {'form': form})
+        return render(request, 'client/client_form.html', {'form': form})
 
 
 # TODO: НАСТРОИТЬ ПРАВА НА УДАЛЕНИЕ ИЗМЕНЕНИЕ КОНТРАГЕНТОВ
@@ -95,57 +93,45 @@ def client_edit(request, pk):
             return redirect('client_list')
     else:
         form = ClientForm(instance=client)
-        return render(request, 'client_edit.html', {'form': form})
+        return render(request, 'client/client_edit.html', {'form': form})
 
-
+# endregion
 
 # region РАСЧЕТЫ
 
 class CalculationListView(ListView):
     model = Calculation
-    template_name = 'calculation_list.html'
+    template_name = 'calculation/calculation_list.html'
     context_object_name = 'calculations'
-    paginate_by = 10  #
+    paginate_by = 10
+
 class CalculationDetailView(DetailView):
     model = Calculation
-    template_name = 'calculation_detail.html'
+    template_name = 'calculation/calculation_detail.html'
     context_object_name = 'calculation'
 
-def calculation_edit(request, pk):
-    """
-    Изменение данных контрагента по
-    первичному ключу при выборе в списке
-    :param request:
-    :param pk:
-    :return:
-    """
-    calculation = get_object_or_404(Calculation, pk=pk)
+def CalculationCreateView(request):
     if request.method == 'POST':
-        form = CalculationForm(request.POST, instance=calculation)
+        form = CalculationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('calculation_list')
-    else:
-        form = CalculationForm(instance=calculation)
-        return render(request, 'calculation_detail.html', {'form': form})
+            calculation = form.save(commit=False)  # Не сохраняем форму сразу
+            calculation.user = request.user  # Устанавливаем поле user равным текущему пользователю
+            calculation.save()  # Сохраняем форму
+            return redirect('calculation-list')
 
+    else:
+        form = CalculationForm()
+
+        return render(request, 'calculation/calculation_create.html', {'form': form})
 # endregion
 
-def search_clients(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        query = request.GET.get('query', '')
-        clients = Client.objects.filter(name__icontains=query)
-
-        data = [{'id': client.id, 'name': client.name} for client in clients]
-        return JsonResponse(data, safe=False)
-    else:
-        return JsonResponse({}, status=400)
 
 
 
 
 
-class CalculationCreateView(generics.CreateAPIView):
-    queryset = Calculation.objects.all() # набор объектов для проверки уникальности
-    serializer_class = CalculationSerializer # сериализатор для ввода и вывода данных
-# endregion
+
+
+
+
+

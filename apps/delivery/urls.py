@@ -12,11 +12,9 @@ urlpatterns = [
     path('add/', views.client_form, name='client_form'),
     path('client/<int:pk>/', views.client_edit, name='client_detail'),
     path('client/', views.client_list, name='client_list'),
-
     path('calculations/', CalculationListView.as_view(), name='calculation-list'),
     path('calculation/<int:pk>/', CalculationDetailView.as_view(), name='calculation_detail'),
-
-    path("calculation-create", CalculationCreateView.as_view(), name="calculation-create"),
+    path("calculation-create", views.CalculationCreateView, name="calculation-create"),
 
 
 
