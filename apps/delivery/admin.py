@@ -34,3 +34,20 @@ tuple_models_adm_pnl=(Calculation,Client,ContactClient)
 views_admin_panel(tuple_models_adm_pnl)
 
 
+
+
+'''
+class CalculationForm(forms.ModelForm):
+    class Meta:
+        model = Calculation
+        exclude = ()
+        widgets = {
+            'cities_visited': SearchableSelect(model='cities.City', search_field='name', limit=10)
+        }
+
+
+class CalculationAdmin(admin.ModelAdmin):
+    form = CalculationForm
+
+admin.site.register(Calculation, CalculationAdmin)
+'''

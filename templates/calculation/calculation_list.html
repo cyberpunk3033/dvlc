@@ -6,31 +6,34 @@
 <table>
   <thead>
     <tr>
-      <th>Контрагент</th>
+       <th>Номер расчета</th>
       <th>Tип доставки</th>
       <th>Базовая цепь</th>
-      <th>Брэнд</th>
-      <th>Тип обработки</th>
-      <th>Вес</th>
+
       <th>Поставка дней</th>
-      <th>Создано</th>
+
       <th>Примерная дата доставки</th>
         <th>Пользователь</th>
+        <th>Стоимость за 1 метр</th>
+        <th>Полная стоимость</th>
+        <th>Количество метров</th>
     </tr>
   </thead>
   <tbody>
     {% for calculation in calculations %}
     <tr>
-        <td><a title="Нажмите для редактирования  и подробного просмотра" href="{% url 'calculation_detail' calculation.pk %}">{{ calculation.client }}</a></td>
+
+        <td><a title="Нажмите для подробного просмотра" href="{% url 'calculation_detail' calculation.pk %}">№{{calculation.pk}}: {{ calculation.created }} - Клиент: {{ calculation.client}}</a></td>
       <td>{{ calculation.type_delivery }}</td>
       <td>{{ calculation.base_chain }}</td>
-      <td>{{ calculation.brand }}</td>
-      <td>{{ calculation.type_processing }}</td>
-      <td>{{ calculation.weight }}</td>
+
       <td>{{ calculation.days }}</td>
-      <td>{{ calculation.created }}</td>
+
       <td>{{ calculation.data_delivery }}</td>
         <td>{{ calculation.user }}</td>
+      <td>{{ calculation.price_1m }}</td>
+      <td>{{ calculation.price_full }}</td>
+      <td>{{ calculation.quantity_chains_m }}</td>
     </tr>
     {% endfor %}
   </tbody>

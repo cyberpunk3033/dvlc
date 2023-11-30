@@ -15,9 +15,10 @@ class TypeDelivery(models.Model):
     name_delivery = models.CharField(verbose_name='Тип доставки', max_length=50)
     code_delivery = models.CharField(verbose_name='Код доставки', max_length=50, help_text='', default="LS")
     duty = models.FloatField(verbose_name='Гос. пошлина у.е.', default=300)
+    days = models.IntegerField(verbose_name='Доставка в днях', default=0)
 
     def __str__(self):
-        return self.name_delivery
+        return f'{self.name_delivery}'
 
     class Meta:
         verbose_name = 'Варианты доставки'
@@ -111,12 +112,12 @@ class OtherVariant(models.Model):
     brand = models.ForeignKey(BrandChain, on_delete=models.CASCADE, default=1)
     type_processing = models.CharField(verbose_name='Тип обработки цепи', max_length=30, help_text='',
                                        choices=TYPE_OF_PROCESSING, default='NOP')
-    km_field = models.FloatField(verbose_name='Стоимость кг. дол. США', default=1)
+    km_field = models.FloatField(verbose_name='Коэффициенты стоимости цепей', default=1)
     days = models.IntegerField(verbose_name='Дней на изготовление', help_text='', default=70)
     margin = models.FloatField(verbose_name='Маржа', default=1)
 
     def __str__(self):
-        return f' {self.brand}-{self.type_processing}-{self.km_field}-{self.days}-{self.margin}'
+        return f' {self.brand}-{self.type_processing}'
 
     class Meta:
         verbose_name = 'Дополнительные варианты обработки'
@@ -175,13 +176,17 @@ class Calculation(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)
     type_delivery = models.ForeignKey(TypeDelivery, on_delete=models.CASCADE, default=None)
     base_chain = models.ForeignKey(BaseChain, on_delete=models.CASCADE, default=0)
-    brand = models.ForeignKey(BrandChain, on_delete=models.CASCADE, default=0)
+
     type_processing = models.ForeignKey(OtherVariant, on_delete=models.CASCADE, default=0)
-    weight = models.IntegerField(verbose_name='Вес общий', default=1)
-    days = models.IntegerField(verbose_name='Дней на доставку', default=1)
+    weight = models.FloatField(verbose_name='Общий вес', default=0)
+    days = models.IntegerField(verbose_name='Дней на доставку', default=0)
     created = models.DateTimeField(verbose_name='Дата расчета', default=datetime.now)
+    quantity_chains_m=models.IntegerField(verbose_name='Количество цепи в метрах', default=0)
+    price_1m= models.FloatField(verbose_name='Стоимость метра цепи с доставкой у.е.', default=0)
+    price_full=models.FloatField(verbose_name='Полная стоимость у.е.', default=0)
     data_delivery = models.DateField(verbose_name='Ориентировочная дата доставки',
                                      default=datetime.now)  # рассчитать автоматически
+    price_calc_weight=models.FloatField(verbose_name='Цена из модели "Стоимость доставки"', default=0)
 
     class Meta:
         verbose_name = 'Расчет'
@@ -189,11 +194,31 @@ class Calculation(models.Model):
 
 
     def save(self, *args, **kwargs):
+
         """
         Вычисление примерной даты доставки
         """
+        self.weight = (self.base_chain.weight * self.quantity_chains_m) / 1000
+        # получим цену после расчеты общей массы из модели "Стоимость доставки", по первому значению больше self.weight
+        price_delivery=DeliveryRate.objects.filter(weight__gt=self.weight,
+                       type_delivery_id=self.type_delivery).order_by('weight').first().price
+        # Предложение цены = (((вес цепи * коэффициент стоимости цепи) + стоимость
+        # доставки по морю, согласно веса заказа)) * пошлину) / количество * коэффициент
+        # наценки, для примера 1, 55, но ниже указаны точные заданные
+
+        self.price_1m=((((self.base_chain.weight*self.type_processing.km_field*self.quantity_chains_m)+price_delivery)*self.base_chain.rate)
+                       /self.quantity_chains_m*self.type_processing.margin)
+
+        self.price_full= self.price_1m*self.quantity_chains_m
+
+        self.days = self.type_processing.days + 15 + self.type_delivery.days # 15 дней на договор
+        self.price_calc_weight=price_delivery
+
+
+
         if self.days:  # Проверить, что days имеет значение, а не None
             self.data_delivery = datetime.now().date() + timedelta(days=self.days)  # Вычислить датУ доставки
+
         super().save(*args, **kwargs)
 
 # endregion

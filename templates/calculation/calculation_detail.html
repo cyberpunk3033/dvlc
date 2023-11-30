@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <head>
-    <title>Детали расчета <p>Клиент: {{ calculation.client.name }}</p> от <p>Дата расчета: {{ calculation.created }}</p></title>
+    <title>Детали расчета </title>
 </head>
 <body>
     <h1>Детали Расчета #{{ calculation.id }}</h1>
-    <p>Клиент: {{ calculation.client }}</p>
-    <p>Тип доставки: {{ calculation.type_delivery }}</p>
+       <p>Клиент: {{ calculation.client }}</p>
+     <p>Менеджер: {{ calculation.user.first_name }} {{ calculation.user.last_name }}</p>
+      <p>Тип доставки: {{ calculation.type_delivery }}</p>
     <p>Базовая цепь: {{ calculation.base_chain }}</p>
-    <p>Брэнд цепи: {{ calculation.brand }}</p>
     <p>Тип обработки: {{ calculation.type_processing }}</p>
-    <p>Вес: {{ calculation.weight }}</p>
+    <p>Общий вес в тонах: {{ calculation.weight }}</p>
     <p>Дней на доставку: {{ calculation.days }}</p>
     <p>Дата расчета: {{ calculation.created }}</p>
-    <p>Дата доставки: {{ calculation.data_delivery }}</p>
+    <p>Количество цепи в метрах: {{ calculation.quantity_chains_m }}</p>
+    <p>Стоимость за 1 метр: {{ calculation.price_1m }}</p>
+    <p>Полная стоимость: {{ calculation.price_full }}</p>
+    <p>Цена из модели "Стоимость доставки": {{ calculation.price_calc_weight }}</p>
 </body>
 {% endblock content %}
