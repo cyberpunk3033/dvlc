@@ -194,17 +194,22 @@ class Calculation(models.Model):
 
 
     def save(self, *args, **kwargs):
+        """
+        Вычисление примерной даты доставки и стоимости
+        """
+        # максимальные веса по доставкам
+        max_sea = 26
+        max_train = 24
+        max_auto = 21
+        max_airplane = 5
 
-        """
-        Вычисление примерной даты доставки
-        """
         self.weight = (self.base_chain.weight * self.quantity_chains_m) / 1000
         # получим цену после расчеты общей массы из модели "Стоимость доставки", по первому значению больше self.weight
         price_delivery=DeliveryRate.objects.filter(weight__gt=self.weight,
                        type_delivery_id=self.type_delivery).order_by('weight').first().price
-        # Предложение цены = (((вес цепи * коэффициент стоимости цепи) + стоимость
-        # доставки по морю, согласно веса заказа)) * пошлину) / количество * коэффициент
-        # наценки, для примера 1, 55, но ниже указаны точные заданные
+
+
+
 
         self.price_1m=((((self.base_chain.weight*self.type_processing.km_field*self.quantity_chains_m)+price_delivery)*self.base_chain.rate)
                        /self.quantity_chains_m*self.type_processing.margin)
