@@ -193,37 +193,69 @@ class Calculation(models.Model):
         verbose_name_plural = 'Расчеты'
 
 
-    def save(self, *args, **kwargs):
+    def price_1m_full_price_days(self, price_weight_all):
+        """
+        Вычисление цены за 1 метр, полного веса,
+        количества дней на доставку
+        :param price_weight_all: полный вес
+        :return: цена за 1 метр, полная цена, количество дней, дата доставки
+        """
+        self.price_1m = ((((self.base_chain.weight * self.type_processing.km_field
+                            * self.quantity_chains_m)
+                           + price_weight_all) * self.base_chain.rate)
+                         / self.quantity_chains_m * self.type_processing.margin)
+
+        self.price_full = self.price_1m * self.quantity_chains_m
+        self.days = self.type_processing.days  + self.type_delivery.days + 15 # 15 дней на заключение договора
+        self.data_delivery = datetime.now().date() + timedelta(days=self.days)
+
+        return self.price_1m,self.price_full,self.days,self.data_delivery
+
+
+    def save(self, *args, **kwargs): # переопределение метода save
         """
         Вычисление примерной даты доставки и стоимости
         """
-        # максимальные веса по доставкам
-        max_sea = 26
-        max_train = 24
-        max_auto = 21
-        max_airplane = 5
-
+        # вес всего заказа в тонах
         self.weight = (self.base_chain.weight * self.quantity_chains_m) / 1000
-        # получим цену после расчеты общей массы из модели "Стоимость доставки", по первому значению больше self.weight
-        price_delivery=DeliveryRate.objects.filter(weight__gt=self.weight,
-                       type_delivery_id=self.type_delivery).order_by('weight').first().price
+        # максимальный вес по данному типу доставки type_delivery_id
+        last_weight = (DeliveryRate.objects.filter(type_delivery_id=self.type_delivery).
+                       latest('weight').weight)
+        # цена за один полный контейнер
+        price_delivery_last_weight = (DeliveryRate.objects.filter(type_delivery_id=self.type_delivery).
+                                      latest('weight').price)
 
+        # нужно брать pk для сравнения так как метод стр преобразует в строку и сравнить не получится
+        if self.weight > last_weight:
+            # вычислить остаток веса, для того чтобы найти для него стоимость
+            remained_weight = self.weight - (self.weight // last_weight) * last_weight
+            # цена доставки для остатка получим цену по первому значению больше remained_weight
+            price_delivery_remained = DeliveryRate.objects.filter(weight__gt=remained_weight,
+                                     type_delivery_id=self.type_delivery).order_by('weight').first().price
+            # цена за несколько контейнеров
+            price_delivery_full_weight = price_delivery_last_weight*(self.weight // last_weight)
+            # цена за полные контейнеры + неполный
+            price_weight_all = price_delivery_full_weight + price_delivery_remained
+            # цена за килограмм ВЫЗОВ ФУНКЦИИ price_1m_full_price_days
+            # ЦЕНА ЗА 1 МЕТР, ПОЛНАЯ ЦЕНА, КОЛИЧЕСТВО ДНЕЙ, дата доставки
+            (self.price_1m, self.price_full,
+             self.days, self.data_delivery)= self.price_1m_full_price_days(price_weight_all)
+            # цена за весь заказ
+            self.price_full = self.price_1m * self.quantity_chains_m
+            # цена за доставку рассчитанная по
+            self.price_calc_weight = price_weight_all
+            super().save(*args, **kwargs)
+        else:
+            # цена за доставку
+            price_delivery = DeliveryRate.objects.filter(weight__gt=self.weight,
+                            type_delivery_id=self.type_delivery).order_by('weight').first().price
+            # цена за килограмм ВЫЗОВ ФУНКЦИИ price_1m_full_price_days
+            # ЦЕНА ЗА 1 МЕТР, ПОЛНАЯ ЦЕНА, КОЛИЧЕСТВО ДНЕЙ, дата доставки
+            (self.price_1m, self.price_full,
+             self.days, self.data_delivery) = self.price_1m_full_price_days(price_delivery)
+            # цена за весь заказ
+            self.price_calc_weight = price_delivery
 
-
-
-        self.price_1m=((((self.base_chain.weight*self.type_processing.km_field*self.quantity_chains_m)+price_delivery)*self.base_chain.rate)
-                       /self.quantity_chains_m*self.type_processing.margin)
-
-        self.price_full= self.price_1m*self.quantity_chains_m
-
-        self.days = self.type_processing.days + 15 + self.type_delivery.days # 15 дней на договор
-        self.price_calc_weight=price_delivery
-
-
-
-        if self.days:  # Проверить, что days имеет значение, а не None
-            self.data_delivery = datetime.now().date() + timedelta(days=self.days)  # Вычислить датУ доставки
-
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
 # endregion

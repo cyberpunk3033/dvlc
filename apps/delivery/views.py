@@ -104,6 +104,7 @@ class CalculationListView(ListView):
     template_name = 'calculation/calculation_list.html'
     context_object_name = 'calculations'
     paginate_by = 10
+    ordering = '-created'
 
 class CalculationDetailView(DetailView):
     model = Calculation
