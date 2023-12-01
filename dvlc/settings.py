@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
+
+sys.path.insert (0, os.path.join (BASE_DIR,'apps'))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
@@ -28,19 +32,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     'apps.user',
     'apps.delivery',
     'import_export',
     'rest_framework',
-    'searchableselect',
-                ]
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-REST_FRAMEWORK =            {
-'DEFAULT_RENDERER_CLASSES': [
-'rest_framework.renderers.BrowsableAPIRenderer',
-                            ]
-                            }
+    'dal',
+    'dal_select2',
+
+]
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,8 +58,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-AUTH_USER_MODEL='user.CustomUser'
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+AUTH_USER_MODEL = 'user.CustomUser'
 ROOT_URLCONF = 'dvlc.urls'
 TEMPLATES = [
     {
@@ -72,7 +79,6 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'dvlc.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -82,7 +88,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -102,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -113,7 +117,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

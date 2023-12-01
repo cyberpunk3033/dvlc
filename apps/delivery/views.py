@@ -59,7 +59,6 @@ def client_search(request, q):
     return render(request, 'client/client_list.html', {'client_list': client_list})
 
 
-# TODO: автоматизировать подстановку пользователя при добавлении клиента
 def client_form(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
@@ -76,7 +75,7 @@ def client_form(request):
 
 
 # TODO: НАСТРОИТЬ ПРАВА НА УДАЛЕНИЕ ИЗМЕНЕНИЕ КОНТРАГЕНТОВ
-
+# TODO: ДОБАВИТЬ ВИДИМОСТЬ РАСЧЕТОВ НА СТРАНИЦЕ КОНТРАГЕНТА
 def client_edit(request, pk):
     """
     Изменение данных контрагента по
