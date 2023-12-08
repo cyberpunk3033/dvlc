@@ -1,9 +1,20 @@
 from django.contrib import admin
-from .models import (BaseChain, OtherVariant,ContactClient,Calculation,BrandChain,TypeDelivery,DeliveryRate,Client)
+
+
+from .models import (BaseChain, OtherVariant, ContactClient, Calculation, BrandChain, TypeDelivery, DeliveryRate,
+                     Client,Country)
+from searchableselect.widgets import SearchableSelect
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
 #region БАЗОВЫЕ ФУНКЦИИ И КЛАССЫ
+
+class CalculationAdmin(admin.ModelAdmin):
+    search_fields = ['client__name',]
+
+admin.site.register(Calculation, CalculationAdmin)
+
+
 
 def views_admin_panel(models_:tuple):
 
@@ -30,7 +41,7 @@ tuple_models_imp_exp=(BaseChain,BrandChain,OtherVariant,DeliveryRate,TypeDeliver
 imp_exp_model_data(tuple_models_imp_exp)
 
 
-tuple_models_adm_pnl=(Calculation,Client,ContactClient)
+tuple_models_adm_pnl=(Client,ContactClient)
 views_admin_panel(tuple_models_adm_pnl)
 
 

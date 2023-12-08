@@ -1,15 +1,26 @@
-from dal import autocomplete
-from .models import BaseChain
+import autocomplete_light as al
+from .models import Client, BaseChain
 
-class CountryAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        if not self.request.user.is_authenticated():
-            return BaseChain.objects.none()
+al.register(Client,
+search_fields=['^name'],
+attrs={
+'placeholder': 'Название контрагента',
+'data-autocomplete-minimum-characters': 1,
+},
+widget_attrs={
+'data-widget-maximum-values': 4,
+'class': 'modern-style',
+},
+)
 
-        qs = BaseChain.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__istartswith=self.q)
-
-        return qs
+al.register(BaseChain,
+search_fields=['^name'],
+attrs={
+'placeholder': 'Название базовой цепи',
+'data-autocomplete-minimum-characters': 1,
+},
+widget_attrs={
+'data-widget-maximum-values': 4,
+'class': 'modern-style',
+},
+)

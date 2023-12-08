@@ -1,13 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Редактирование данных контрагента{% endblock %}
+{% block title %}Изменить контрагента{% endblock %}
 
 {% block content %}
-<h1>Редактирование клиента</h1>
-<form method="POST">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Сохранить">
+<h1>Изменить контрагента</h1>
+<form id="client-form" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button id="edit-button" type="button">Разрешить редактирование</button>
+  <button type="submit" disabled>Сохранить</button>
 </form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('client-form');
+    var inputs = form.getElementsByTagName('input');
+    var editButton = document.getElementById('edit-button');
+
+    // Блокируем все поля формы по умолчанию
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].setAttribute('disabled', 'disabled');
+    }
+
+    // Обработчик клика на кнопке "Разрешить редактирование"
+    editButton.addEventListener('click', function() {
+      // Разблокируем все поля формы
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].removeAttribute('disabled');
+      }
+      // Включаем кнопку "Сохранить"
+      form.querySelector('button[type="submit"]').removeAttribute('disabled');
+    });
+  });
+</script>
 {% endblock %}
