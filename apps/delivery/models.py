@@ -3,6 +3,10 @@ from datetime import timedelta, datetime
 from apps.user.models import CustomUser
 from django.db import models
 
+'''
+class BaseModel(models.Model):
+    name=models.CharField(verbose_name='Тип доставки', max_length=50)
+    '''
 
 # region ДОСТАВКА
 class TypeDelivery(models.Model):
@@ -124,16 +128,30 @@ class OtherVariant(models.Model):
 # endregion
 
 
+class Country(models.Model):
+    name = models.CharField(verbose_name='Страна', max_length=50)
+
+    def __str__(self):
+        return f'{self.name}'
+
 # region КОНТРАГЕНТ И КОНТАКТЫ
 class Client(models.Model):
     # поля для клиента
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    note = models.TextField()
-    unp = models.CharField(max_length=100)  # имя клиента
-    email = models.EmailField()  # электронная почта клиента
-    phone = models.CharField(max_length=20)  # телефон клиента
-    address = models.TextField()  # адрес клиента
+    user = models.ForeignKey(CustomUser,verbose_name='Менеджер', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100,verbose_name='Наименование',)
+    unp = models.CharField(max_length=100,verbose_name='УНП')  #
+    email = models.EmailField(verbose_name='ЕМЕЙЛ',default=None)  # электронная почта клиента
+    phone = models.CharField(max_length=20,verbose_name='Телефон',null=False)  # телефон клиента
+    country = models.ForeignKey(Country, verbose_name='Страна',on_delete=models.CASCADE,default=1)
+    region = models.CharField(max_length=50,verbose_name='Регион(область)',null=True)
+    city = models.CharField(max_length=50,verbose_name='Город(нас. пункт)',null=True)
+    street = models.CharField(max_length=50,verbose_name='Улица(проспект)',null=True)
+    house_number = models.IntegerField(verbose_name='№ дома',null=True)
+    quarter = models.IntegerField(verbose_name='Квартал',null=True)
+    office = models.IntegerField(verbose_name='Офис',null=True)
+    floor = models.IntegerField(verbose_name='Этаж',null=True)
+    entrance=models.IntegerField(default=1,verbose_name='Подъезд')
+
 
     def __str__(self):
         return self.name
@@ -145,10 +163,8 @@ class Client(models.Model):
 
 class ContactClient(models.Model):  # наследуем от модели и базового класса
     # поля для контакта клиента
-
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)  # ссылка на клиента
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='contacts')
     name = models.CharField(max_length=100)
-    note = models.TextField()
     role = models.CharField(max_length=50)
     email = models.EmailField()  # электронная почта контакта
     phone = models.CharField(max_length=20)  # телефон контакта
@@ -170,10 +186,10 @@ class Calculation(models.Model):
          ВЫПОЛНЕННЫЕ РАСЧЕТЫ ДОСТАВКИ
     """
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)
-    type_delivery = models.ForeignKey(TypeDelivery, on_delete=models.CASCADE, default=None)
-    base_chain = models.ForeignKey(BaseChain, on_delete=models.CASCADE, default=0)
-    type_processing = models.ForeignKey(OtherVariant, on_delete=models.CASCADE, default=0)
+    client = models.ForeignKey(Client,verbose_name="Клиент", on_delete=models.CASCADE, default=None)
+    type_delivery = models.ForeignKey(TypeDelivery,verbose_name="Тип доставки", on_delete=models.CASCADE, default=None)
+    base_chain = models.ForeignKey(BaseChain,verbose_name="Базовая цепь" ,on_delete=models.CASCADE, default=None)
+    type_processing = models.ForeignKey(OtherVariant,verbose_name="Тип обработки",  on_delete=models.CASCADE, default=0)
     weight = models.FloatField(verbose_name='Общий вес', default=0)
     days = models.IntegerField(verbose_name='Дней на доставку', default=0)
     created = models.DateTimeField(verbose_name='Дата расчета', default=datetime.now)
@@ -221,7 +237,7 @@ class Calculation(models.Model):
         price_delivery_last_weight = (DeliveryRate.objects.filter(type_delivery_id=self.type_delivery).
                                       latest('weight').price)
 
-        # нужно брать pk для сравнения так как метод стр преобразует в строку и сравнить не получится
+        # если вес больше максимального в таблице то делим его на максимальный и получаем количество контейнеров
         if self.weight > last_weight:
             # вычислить остаток веса, для того чтобы найти для него стоимость
             remained_weight = self.weight - (self.weight // last_weight) * last_weight
