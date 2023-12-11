@@ -17,10 +17,10 @@
     <tr>
         <th>Номер</th>
       <th>Контрагент</th>
-      <th>Примечание</th>
+    
       <th>Емейл</th>
       <th>Телефон</th>
-      <th>Адрес</th>
+
         <th>Менеджер</th>
 
     </tr>
@@ -29,11 +29,11 @@
     {% for client in client_list %}
     <tr>
     <td><a title="Нажмите для редактирования  и подробного просмотра" href="{% url 'client_detail' client.id  %}">{{ client.name }}</a></td>
-      <td>{{ client.note}}</td>
+   
       <td>{{ client.unp }}</td>
       <td>{{ client.email}}</td>
       <td>{{ client.phone}}</td>
-      <td>{{  client.address }}</td>
+ 
     <td>{{  client.user }}</td>
 
     </tr>

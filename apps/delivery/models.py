@@ -128,15 +128,30 @@ class OtherVariant(models.Model):
 
 
 # region КОНТРАГЕНТ И КОНТАКТЫ
+class Country(models.Model):
+    name = models.CharField(verbose_name='Страна', max_length=50)
+
+    def __str__(self):
+        return f'{self.name}'
+
+# region КОНТРАГЕНТ И КОНТАКТЫ
 class Client(models.Model):
     # поля для клиента
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    note = models.TextField()
-    unp = models.CharField(max_length=100)  # имя клиента
-    email = models.EmailField()  # электронная почта клиента
-    phone = models.CharField(max_length=20)  # телефон клиента
-    address = models.TextField()  # адрес клиента
+    user = models.ForeignKey(CustomUser,verbose_name='Менеджер', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100,verbose_name='Наименование',)
+    unp = models.CharField(max_length=100,verbose_name='УНП')  #
+    email = models.EmailField(verbose_name='ЕМЕЙЛ',default=None)  # электронная почта клиента
+    phone = models.CharField(max_length=20,verbose_name='Телефон',null=False)  # телефон клиента
+    country = models.ForeignKey(Country, verbose_name='Страна',on_delete=models.CASCADE,default=1)
+    region = models.CharField(max_length=50,verbose_name='Регион(область)',null=True)
+    city = models.CharField(max_length=50,verbose_name='Город(нас. пункт)',null=True)
+    street = models.CharField(max_length=50,verbose_name='Улица(проспект)',null=True)
+    house_number = models.IntegerField(verbose_name='№ дома',null=True)
+    quarter = models.IntegerField(verbose_name='Квартал',null=True)
+    office = models.IntegerField(verbose_name='Офис',null=True)
+    floor = models.IntegerField(verbose_name='Этаж',null=True)
+    entrance=models.IntegerField(default=1,verbose_name='Подъезд')
+
 
     def __str__(self):
         return self.name

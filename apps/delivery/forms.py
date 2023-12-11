@@ -7,8 +7,7 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        fields = ['name', 'note', 'unp', 'email', 'phone', 'address']
-
+        exclude = ('user',)
 
 class CalculationForm(forms.ModelForm):
     class Meta:
