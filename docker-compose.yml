@@ -1,0 +1,29 @@
+services:
+  django:
+    ports:
+      - "8800:8800"
+    image: anuragrana/pythondjango
+
+#Сервис для веб-приложения
+web:
+
+#Собрать образ из Dockerfile
+build: .
+
+#Пробросить порт 8000 из контейнера на порт 8000 хоста
+ports:
+•  8000:8000
+
+#Подключить том с именем dbdata, чтобы сохранять данные sqlite
+volumes:
+•  dbdata:/db
+
+#Запустить команду для запуска сервера разработки
+command:
+  python manage.py runserver 0.0.0.0:8000
+
+#Определить тома, которые будут использоваться сервисами
+volumes:
+
+#Том для хранения данных sqlite
+dbdata:

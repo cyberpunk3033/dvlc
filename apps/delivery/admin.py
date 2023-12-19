@@ -1,30 +1,21 @@
 from django.contrib import admin
 
-
 from .models import (BaseChain, OtherVariant, ContactClient, Calculation, BrandChain, TypeDelivery, DeliveryRate,
-                     Client,Country)
+                     Client, Country)
 from searchableselect.widgets import SearchableSelect
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
-#region БАЗОВЫЕ ФУНКЦИИ И КЛАССЫ
 
-class CalculationAdmin(admin.ModelAdmin):
-    search_fields = ['client__name',]
+# region БАЗОВЫЕ ФУНКЦИИ И КЛАССЫ
 
-admin.site.register(Calculation, CalculationAdmin)
-
-
-
-def views_admin_panel(models_:tuple):
-
+def views_admin_panel(models_: tuple):
     for model in models_:
         admin.site.register(model)
 
-def imp_exp_model_data(models_:tuple):
-    #list_filter_=('',)
-
-    for model_ in models_:
+#TODO: переписать с ипользованием ->type или не надо???(плохо читаемо)
+def imp_exp_model_data(dict_mdl_flds):
+    for model_, fields_ in dict_mdl_flds.items():
 
         class Base_Resource(resources.ModelResource):
             class Meta:
@@ -32,33 +23,27 @@ def imp_exp_model_data(models_:tuple):
 
         @admin.register(model_)
         class Base_Admin(ImportExportModelAdmin):
+            if fields_[0]:
+                search_fields = fields_[0]
+            if fields_[1]:
+                list_filter = fields_[1]
+
             resource_class = Base_Resource
+
 
 # endregion
 
+# добавление в административную часть модели с возможностью експорта и импорта данных
+#                        - пример: ИмяМодели:[[список полей для поиска], [список полей для фильтрации]]
+# если не нужны, то пустой список: ИмяМодели:[ [], [] ]
+dict_models_imp_exp = {BaseChain: [['name_chains'], ['standard']],
+                       OtherVariant: [[], ['brand__name_brand']],
+                       Client: [['name', 'unp'], []],
+                       Country:[[], []],
+                       DeliveryRate:[[], []],
+                       }
 
-tuple_models_imp_exp=(BaseChain,BrandChain,OtherVariant,DeliveryRate,TypeDelivery)
-imp_exp_model_data(tuple_models_imp_exp)
+imp_exp_model_data(dict_models_imp_exp)
 
-
-tuple_models_adm_pnl=(Client,ContactClient)
+tuple_models_adm_pnl = (ContactClient,BrandChain,TypeDelivery,Calculation)
 views_admin_panel(tuple_models_adm_pnl)
-
-
-
-
-'''
-class CalculationForm(forms.ModelForm):
-    class Meta:
-        model = Calculation
-        exclude = ()
-        widgets = {
-            'cities_visited': SearchableSelect(model='cities.City', search_field='name', limit=10)
-        }
-
-
-class CalculationAdmin(admin.ModelAdmin):
-    form = CalculationForm
-
-admin.site.register(Calculation, CalculationAdmin)
-'''

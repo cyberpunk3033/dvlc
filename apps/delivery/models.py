@@ -133,6 +133,9 @@ class Country(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+    class Meta:
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
 
 # region КОНТРАГЕНТ И КОНТАКТЫ
 class Client(models.Model):
