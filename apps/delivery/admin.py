@@ -13,9 +13,14 @@ def views_admin_panel(models_: tuple):
     for model in models_:
         admin.site.register(model)
 
-#TODO: переписать с ипользованием ->type или не надо???(плохо читаемо)
-def imp_exp_model_data(dict_mdl_flds):
-    for model_, fields_ in dict_mdl_flds.items():
+
+# TODO: переписать с ипользованием ->type или не надо???(плохо читаемо)
+def imp_exp_model_data(dict_model_fields: dict):
+    """
+    Добавление моделей в админ-панель с возможностью импорта-экспорта, поиска и фильтрации
+    :param dict_model_fields: ИмяМодели: [[список полей для поиска], [список полей для фильтрации]], ...
+    """
+    for model_, fields_ in dict_model_fields.items():
 
         class Base_Resource(resources.ModelResource):
             class Meta:
@@ -33,17 +38,18 @@ def imp_exp_model_data(dict_mdl_flds):
 
 # endregion
 
-# добавление в административную часть модели с возможностью експорта и импорта данных
-#                        - пример: ИмяМодели:[[список полей для поиска], [список полей для фильтрации]]
-# если не нужны, то пустой список: ИмяМодели:[ [], [] ]
+
+#                        - пример: ИмяМодели: [[список полей для поиска], [список полей для фильтрации]]
+# если не нужны, то пустой список: ИмяМодели: [[], []]
 dict_models_imp_exp = {BaseChain: [['name_chains'], ['standard']],
                        OtherVariant: [[], ['brand__name_brand']],
                        Client: [['name', 'unp'], []],
-                       Country:[[], []],
-                       DeliveryRate:[[], []],
+                       Country: [[], []],
+                       DeliveryRate: [[], []],
+                       Calculation: [['client__name', 'client__unp'], []]
                        }
 
 imp_exp_model_data(dict_models_imp_exp)
 
-tuple_models_adm_pnl = (ContactClient,BrandChain,TypeDelivery,Calculation)
+tuple_models_adm_pnl = (ContactClient, BrandChain, TypeDelivery, )
 views_admin_panel(tuple_models_adm_pnl)

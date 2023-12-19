@@ -207,6 +207,9 @@ class Calculation(models.Model):
         verbose_name = 'Расчет'
         verbose_name_plural = 'Расчеты'
 
+    def __str__(self):
+        return f'Клиент -"{self.client}", доставка -{self.type_delivery}, дата поставки-{self.data_delivery}, цепь- {self.base_chain}'
+
 
     def price_1m_full_price_days(self, price_weight_all):
         """
